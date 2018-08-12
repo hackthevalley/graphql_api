@@ -13,8 +13,14 @@ Our API is open to the public, however, some queries and mutations might require
 First you will need to obtain an API key, this can be achieved by calling `createHackerToken()` with your login credentials.
 
 ```graphql
-mutation { createHackerToken("hello@hackthevalley.io", "htv123") { token_body } }
+mutation {
+    createHackerToken(email_address: "hello@hackthevalley.io", password: "htv123") {
+        token_body
+    }
+}
 ```
+
+> By default, API key expire after 24 hours, you can pass an optional argument called `expire_after` in seconds.
 
 After obtaining `token_body`, pass it as bearer token header to authenticate:
 
