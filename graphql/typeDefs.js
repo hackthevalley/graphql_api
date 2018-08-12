@@ -1,6 +1,7 @@
 module.exports = `
 type Query {
-    events: [Event]
+    events: [Event],
+    me: Hacker
 }
 
 type Event {

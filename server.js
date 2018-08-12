@@ -19,9 +19,19 @@ app.use(bodyParser.urlencoded({extended: false}));
 // Initialize GraphQL
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
+const authenticationMiddleware = require('./middlewares/authenticationMiddleware');
+
+app.use(authenticationMiddleware);
+
 
 // Initialize GraphQL endpoints
-const server = new ApolloServer({typeDefs, resolvers});
+const server = new ApolloServer({
+    typeDefs, resolvers,
+    context: ({ req }) => ({
+        hacker: req.hacker
+    })
+});
+
 server.applyMiddleware({app});
 
 // Connect to database
@@ -29,4 +39,4 @@ mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true})
     .then(() => console.log("Mongoose connected..."));
 
 // Start the server
-app.listen(PORT_NUMBER, () => console.log('Go to http://localhost:' + PORT_NUMBER + '/graphiql to run queries!'));
+app.listen(PORT_NUMBER, () => console.log('Go to http://localhost:' + PORT_NUMBER + '/graphql to run queries!'));

@@ -5,7 +5,8 @@ const HackerTokenController = require('../controllers/HackerTokenController');
 
 module.exports =  {
     Query: {
-        events: EventController.list
+        events: EventController.list,
+        me: HackerController.me
     },
     Mutation: {
         createEventEmailSignup: EventEmailSignupController.create,

@@ -49,6 +49,17 @@ class HackerController {
                 })
         });
     }
+
+    /**
+     * Get self
+     * @param obj
+     * @param args
+     * @param context
+     * @returns {*}
+     */
+    static me(obj, args, context) {
+        return context.hacker;
+    }
 }
 
 module.exports = HackerController;
