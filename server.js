@@ -20,15 +20,18 @@ app.use(bodyParser.urlencoded({extended: false}));
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
 const authenticationMiddleware = require('./middlewares/authenticationMiddleware');
+const userAuthenticationMiddleware = require('./middlewares/userAuthenticationMiddleware');
 
 app.use(authenticationMiddleware);
+app.use(userAuthenticationMiddleware);
 
 
 // Initialize GraphQL endpoints
 const server = new ApolloServer({
     typeDefs, resolvers,
     context: ({ req }) => ({
-        hacker: req.hacker
+        hacker: req.hacker,
+        user: req.user
     })
 });
 

@@ -60,6 +60,38 @@ class HackerController {
     static me(obj, args, context) {
         return context.hacker;
     }
+
+    /**
+     * Update a hacker's info
+     * @param obj
+     * @param args
+     * @param context
+     * @returns {Promise<any>}
+     */
+    static update(obj, args, context) {
+        return new Promise((resolve, reject) => {
+            if(!context.hacker && !context.user) {
+                return reject("Unauthorized");
+            }
+            if(context.hacker && context.hacker._id.toString() !== args.id) {
+                return reject("Unauthorized");
+            }
+            if(context.user && !context.user.isAdmin()) {
+                return reject("Unauthorized");
+            }
+            Hacker.findOne({_id: args.id})
+                .then(hacker => {
+                    if(!hacker) {
+                        throw new Error("HackerNotFound");
+                    }
+                    return hacker.set(args.hacker).save();
+                })
+                .then(hacker => {
+                    resolve(hacker);
+                })
+                .catch(e => reject(e));
+        })
+    }
 }
 
 module.exports = HackerController;

@@ -30,6 +30,19 @@ type Hacker {
     updated_at: String
 }
 
+input UpdateHackerInput {
+    first_name: String,
+    last_name: String,
+    gender: String,
+    dob: String,
+    school: String,
+    github: String,
+    linkedin: String,
+    website: String,
+    description: String,
+    promo_email: String
+}
+
 type HackerToken {
     _id: String,
     hacker: Hacker,
@@ -45,9 +58,25 @@ type EventEmailSignup {
     created_at: String
 }
 
+type User {
+    username: String
+    group: String
+}
+
+type UserToken {
+    _id: String,
+    user: User,
+    token_body: String,
+    expire_at: String,
+    created_at: String,
+    updated_at: String   
+}
+
 type Mutation {
     createEventEmailSignup(event_id: String!, email: String!): EventEmailSignup
     createHacker(email_address: String!, password: String!): Hacker
+    updateHacker(id: String!, hacker: UpdateHackerInput!): Hacker
     createHackerToken(email_address: String!, password: String!, expire_after: Int): HackerToken
+    createUserToken(username: String!, password: String!, expire_after: Int): UserToken
 }
 `;
