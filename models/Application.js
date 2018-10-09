@@ -8,7 +8,7 @@ let applicationSchema = mongoose.Schema(
         open: Boolean,
         questions: [
             {
-                type: String,
+                question_type: String,
                 name: String,
                 description: String,
                 required: Boolean,

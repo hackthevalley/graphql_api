@@ -90,6 +90,142 @@ class ApplicationController {
             }
         })
     }
+
+    /**
+     * Create a new question
+     * @param obj
+     * @param args
+     * @param context
+     * @returns {Promise<any>}
+     */
+    static createQuestion(obj, args, context) {
+        return new Promise((resolve, reject) => {
+            if(!context.user || context.user.group !== 'admin') {
+                return reject("NotAuthorized");
+            } else {
+                let app;
+                // First find the application
+                Application.findOne({_id: args.application_id})
+                    .then(result => {
+                        app = result;
+                        if(!app) {
+                            throw new Error("ApplicationNotFound");
+                        }
+                    })
+                    .then(() => {
+                        if(!args.question.question_type.match(/^email|short|long|date|checkbox|choice|radio$/)) {
+                            throw new Error("InvalidQuestionType");
+                        }
+                        if(args.question.question_type === 'choice' && (!args.question.choices || args.question.choices.length === 0)) {
+                            throw new Error("MustHaveAtLeastOneChoice");
+                        }
+                        if(args.question.question_type === 'radio' && (!args.question.choices || args.question.choices.length === 0)) {
+                            throw new Error("MustHaveAtLeastOneChoice");
+                        }
+                        app.questions.push(args.question);
+                        return app.save();
+                    })
+                    .then(app => {
+                        resolve(app);
+                    })
+                    .catch(e => reject(e));
+            }
+        })
+    }
+
+    /**
+     * Update an existing question
+     * @param obj
+     * @param args
+     * @param context
+     * @returns {Promise<any>}
+     */
+    static updateQuestion(obj, args, context) {
+        return new Promise((resolve, reject) => {
+            if(!context.user || context.user.group !== 'admin') {
+                return reject("NotAuthorized");
+            } else {
+                let app, question;
+                // First find the application
+                Application.findOne({_id: args.application_id})
+                    .then(result => {
+                        app = result;
+                        if(!app) {
+                            throw new Error("ApplicationNotFound");
+                        }
+                        question = app.questions.id(args.question_id);
+                        if(!question) {
+                            throw new Error("QuestionNotFound");
+                        }
+                    })
+                    .then(() => {
+                        if(args.question.question_type) {
+                            // We are changing question type
+                            if(!args.question.question_type.match(/^email|short|long|date|checkbox|choice|radio$/)) {
+                                throw new Error("InvalidQuestionType");
+                            }
+                            if(args.question.question_type === 'choice' && (!args.question.choices || args.question.choices.length === 0)) {
+                                throw new Error("MustHaveAtLeastOneChoice");
+                            }
+                            if(args.question.question_type === 'radio' && (!args.question.choices || args.question.choices.length === 0)) {
+                                throw new Error("MustHaveAtLeastOneChoice");
+                            }
+                        } else {
+                            // Not changing question type
+                            if(question.question_type === 'choice' || question.question_type === 'radio') {
+                                if(args.question.choices && args.question.choices.length === 0) {
+                                    throw new Error("MustHaveAtLeastOneChoice");
+                                }
+                            }
+                        }
+                        question.set(args.question);
+                        return app.save();
+                    })
+                    .then(app => {
+                        resolve(app);
+                    })
+                    .catch(e => reject(e));
+            }
+        })
+    }
+
+
+    /**
+     * Remove a question
+     * @param obj
+     * @param args
+     * @param context
+     * @returns {Promise<any>}
+     */
+    static deleteQuestion(obj, args, context) {
+        return new Promise((resolve, reject) => {
+            if(!context.user || context.user.group !== 'admin') {
+                return reject("NotAuthorized");
+            } else {
+                let app, question;
+                // First find the application
+                Application.findOne({_id: args.application_id})
+                    .then(result => {
+                        app = result;
+                        if(!app) {
+                            throw new Error("ApplicationNotFound");
+                        }
+                        question = app.questions.id(args.question_id);
+                        if(!question) {
+                            throw new Error("QuestionNotFound");
+                        }
+                    })
+                    .then(() => {
+                        question.remove();
+                        return app.save();
+                    })
+                    .then(() => {
+                        resolve("Removed");
+                    })
+                    .catch(e => reject(e));
+            }
+        })
+    }
 }
 
 module.exports = ApplicationController;

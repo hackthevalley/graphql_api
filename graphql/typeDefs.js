@@ -23,7 +23,9 @@ type Application {
 }
 
 type ApplicationQuestion {
-    type: String
+    _id: String
+    name: String
+    question_type: String
     description: String
     required: Boolean
     choices: [String]
@@ -97,11 +99,20 @@ input UpdateApplicationInput {
 }
 
 input CreateApplicationQuestionInput {
-    type: String!,
-    name: String!,
-    description: String,
-    required: Boolean!,
-    choices: [String],
+    question_type: String!
+    name: String!
+    description: String
+    required: Boolean!
+    choices: [String]
+    max_characters: Int
+}
+
+input UpdateApplicationQuestionInput {
+    question_type: String
+    name: String
+    description: String
+    required: Boolean
+    choices: [String]
     max_characters: Int
 }
 
@@ -110,7 +121,9 @@ type Mutation {
     createEventApplication(event_id: String!, name: String!): Application
     updateEventApplication(application_id: String!, application: UpdateApplicationInput): Application
     deleteEventApplication(application_id: String!): String
-    createEventApplicationQuestion(application_id: String!, question: CreateApplicationQuestionInput): Application
+    createEventApplicationQuestion(application_id: String!, question: CreateApplicationQuestionInput!): Application
+    updateEventApplicationQuestion(application_id: String!, question_id: String!, question: UpdateApplicationQuestionInput!): Application
+    deleteEventApplicationQuestion(application_id: String!, question_id: String!): String
     createHacker(email_address: String!, password: String!): Hacker
     updateHacker(id: String!, hacker: UpdateHackerInput!): Hacker
     createHackerToken(email_address: String!, password: String!, expire_after: Int): HackerToken
