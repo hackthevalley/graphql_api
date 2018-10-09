@@ -1,4 +1,5 @@
 const Event = require('../models/Event');
+const Application = require('../models/Application');
 
 class EventController {
     /**
@@ -17,6 +18,21 @@ class EventController {
                 .catch(e => {
                     reject(e);
                 })
+        })
+    }
+
+    /**
+     * Get all applications
+     * @param obj
+     * @param args
+     * @param context
+     * @returns {Promise<any>}
+     */
+    static applications(obj, args, context) {
+        return new Promise((resolve, reject) => {
+            Application.find({ event_id: obj._id })
+                .then(applications => resolve(applications))
+                .catch(e => reject(e));
         })
     }
 }

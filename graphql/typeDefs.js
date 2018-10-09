@@ -1,15 +1,33 @@
 module.exports = `
 type Query {
     events: [Event],
-    me: Hacker
+    me: Hacker,
+    user: User
 }
 
 type Event {
     _id: String
     name: String
     email_signups: [EventEmailSignup]
+    applications: [Application]
     created_at: String
     updated_at: String
+}
+
+type Application {
+    _id: String
+    name: String
+    description: String
+    open: Boolean
+    questions: [ApplicationQuestion]
+}
+
+type ApplicationQuestion {
+    type: String
+    description: String
+    required: Boolean
+    choices: [String]
+    max_characters: Int
 }
 
 type Hacker {
@@ -72,8 +90,27 @@ type UserToken {
     updated_at: String   
 }
 
+input UpdateApplicationInput {
+    name: String
+    description: String
+    open: Boolean
+}
+
+input CreateApplicationQuestionInput {
+    type: String!,
+    name: String!,
+    description: String,
+    required: Boolean!,
+    choices: [String],
+    max_characters: Int
+}
+
 type Mutation {
     createEventEmailSignup(event_id: String!, email: String!): EventEmailSignup
+    createEventApplication(event_id: String!, name: String!): Application
+    updateEventApplication(application_id: String!, application: UpdateApplicationInput): Application
+    deleteEventApplication(application_id: String!): String
+    createEventApplicationQuestion(application_id: String!, question: CreateApplicationQuestionInput): Application
     createHacker(email_address: String!, password: String!): Hacker
     updateHacker(id: String!, hacker: UpdateHackerInput!): Hacker
     createHackerToken(email_address: String!, password: String!, expire_after: Int): HackerToken
