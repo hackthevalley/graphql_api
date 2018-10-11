@@ -32,7 +32,7 @@ type HackerApplication {
 type HackerApplicationAnswers {
     _id: String
     question: ApplicationQuestion
-    answer: String
+    answer: [String]
 }
 
 type ApplicationQuestion {
@@ -143,5 +143,6 @@ type Mutation {
     createHackerToken(email_address: String!, password: String!, expire_after: Int): HackerToken
     createUserToken(username: String!, password: String!, expire_after: Int): UserToken
     createHackerApplication(application_id: String!): HackerApplication
+    updateHackerApplicationAnswer(hacker_application_id: String!, question_id: String!, answer: [String]!): HackerApplication
 }
 `;

@@ -26,7 +26,7 @@ class HackerTokenController {
                 })
                 .then(password => {
                     password = password.toString('hex');
-                    if(password !== hacker.password) throw new Error("InvalidPassword");
+                    if(password !== hacker.password) throw new Error("IncorrectPassword");
                     let expire_at = new Date(new Date().getTime() + (args.expire_after ? args.expire_after * 1000 : 86400000));
                     let new_token = new HackerToken({
                         expire_at,

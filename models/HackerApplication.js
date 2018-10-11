@@ -8,7 +8,7 @@ let hackerApplicationSchema = mongoose.Schema(
         answers: [
             {
                 question_id: mongoose.SchemaTypes.ObjectId,
-                answer: String
+                answer: [String]
             }
         ]
     },
