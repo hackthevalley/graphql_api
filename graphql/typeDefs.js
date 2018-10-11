@@ -22,6 +22,19 @@ type Application {
     questions: [ApplicationQuestion]
 }
 
+type HackerApplication {
+    _id: String
+    application: Application
+    submitted_at: String,
+    answers: [HackerApplicationAnswers]
+}
+
+type HackerApplicationAnswers {
+    _id: String
+    question: ApplicationQuestion
+    answer: String
+}
+
 type ApplicationQuestion {
     _id: String
     name: String
@@ -45,6 +58,7 @@ type Hacker {
     website: String,
     description: String,
     avatar: String,
+    applications: [HackerApplication],
     promo_email: String,
     created_at: String,
     updated_at: String
@@ -128,5 +142,6 @@ type Mutation {
     updateHacker(id: String!, hacker: UpdateHackerInput!): Hacker
     createHackerToken(email_address: String!, password: String!, expire_after: Int): HackerToken
     createUserToken(username: String!, password: String!, expire_after: Int): UserToken
+    createHackerApplication(application_id: String!): HackerApplication
 }
 `;

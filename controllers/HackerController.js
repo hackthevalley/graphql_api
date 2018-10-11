@@ -1,9 +1,11 @@
 const Hacker = require('../models/Hacker');
+const HackerApplication = require('../models/HackerApplication');
 const validateEmail = require('../util/validateEmail');
 const uuid = require('uuid-v4');
 const pbkdf2 = require('pbkdf2');
 const util = require('util');
 pbkdf2.pbkdf2 = util.promisify(pbkdf2.pbkdf2);
+
 
 class HackerController {
     /**
@@ -88,6 +90,23 @@ class HackerController {
                 })
                 .then(hacker => {
                     resolve(hacker);
+                })
+                .catch(e => reject(e));
+        })
+    }
+
+    /**
+     * Get all HackerApplications
+     * @param obj
+     * @param args
+     * @param context
+     * @returns {Promise<any>}
+     */
+    static applications(obj, args, context) {
+        return new Promise((resolve, reject) => {
+            HackerApplication.find({hacker_id: obj._id})
+                .then(applications => {
+                    resolve(applications);
                 })
                 .catch(e => reject(e));
         })
