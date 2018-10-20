@@ -28,7 +28,7 @@ class HackerApplicationController {
                     })
                     .then(() => {
                         // Find if we already have an application saved
-                        return HackerApplication.findOne({application_id: app._id});
+                        return HackerApplication.findOne({application_id: app._id, hacker_id: context.hacker._id});
                     })
                     .then(hackerApp => {
                         if(hackerApp) {
