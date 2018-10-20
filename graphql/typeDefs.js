@@ -19,6 +19,7 @@ type Application {
     name: String
     description: String
     open: Boolean
+    event: Event
     questions: [ApplicationQuestion]
 }
 

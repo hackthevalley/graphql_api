@@ -14,6 +14,9 @@ module.exports =  {
         me: HackerController.me,
         user: UserController.user
     },
+    Application: {
+        event: ApplicationController.event
+    },
     Event: {
         applications: EventController.applications
     },

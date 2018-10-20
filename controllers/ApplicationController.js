@@ -226,6 +226,21 @@ class ApplicationController {
             }
         })
     }
+
+    /**
+     * Get event associated with app
+     * @param obj
+     * @param args
+     * @param context
+     * @returns {Promise<any>}
+     */
+    static event(obj, args, context) {
+        return new Promise((resolve, reject) => {
+            Event.findOne({_id: obj.event_id})
+                .then(event => resolve(event))
+                .catch(e => reject(e));
+        })
+    }
 }
 
 module.exports = ApplicationController;
