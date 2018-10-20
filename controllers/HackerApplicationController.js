@@ -114,7 +114,7 @@ class HackerApplicationController {
                             if(question.max_characters && question.max_characters < args.answer[0].length) {
                                 throw new Error("AnswerTooLong");
                             }
-                            if(question.question_type === 'email' && args.answer[0] && !validator.isEmail(question.answer[0])) {
+                            if(question.question_type === 'email' && args.answer[0] && !validator.isEmail(args.answer[0])) {
                                 throw new Error("InvalidEmail");
                             }
                         }
