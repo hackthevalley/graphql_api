@@ -32,6 +32,7 @@ type HackerApplication {
 type HackerApplicationAnswers {
     _id: String
     question: ApplicationQuestion
+    question_id: String
     answer: [String]
 }
 
