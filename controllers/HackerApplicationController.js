@@ -67,6 +67,88 @@ class HackerApplicationController {
     }
 
     /**
+     * Takes in a HackerApplication and a question from Application, returns hacker's answer
+     * If hacker's first answer is "", will return []
+     * @param hackerApp
+     * @param question
+     * @returns {*}
+     * @private
+     */
+    static _getHackerAnswerByQuestion(hackerApp, question) {
+        let answer;
+        for(let i = 0; i < hackerApp.answers.length; i++) {
+            if(hackerApp.answers[i].question_id.toString() === question._id.toString()) {
+                answer = hackerApp.answers[i].answer;
+            }
+        }
+        // If there is no answer, return empty
+        if(!answer) return [];
+        // Now we have the answer, if answer is empty, return empty
+        if(answer.length === 0) return answer;
+        // If first element is empty, return empty
+        if(!answer[0]) return [];
+        // Otherwise, return actual answer
+        return answer;
+    }
+
+    /**
+     * Submit a hacker application
+     * @param obj
+     * @param args
+     * @param context
+     * @returns {Promise<any>}
+     */
+    static submit(obj, args, context) {
+        return new Promise((resolve, reject) => {
+            // First check if hacker is loggedin
+            if(!context.hacker) {
+                reject("NotAuthenticated");
+            } else {
+                let hackerApp, app;
+                HackerApplication.findOne({_id: args.hacker_application_id})
+                    .then(result => {
+                        hackerApp = result;
+                        if(!hackerApp) {
+                            throw new Error("HackerApplicationNotFound");
+                        }
+                        if(hackerApp.hacker_id.toString() !== context.hacker._id.toString()) {
+                            throw new Error("NotAuthenticated");
+                        }
+                        if(hackerApp.submitted_at) {
+                            throw new Error("AlreadySubmitted");
+                        }
+                        return Application.findOne({_id: hackerApp.application_id});
+                    })
+                    .then(result => {
+                        app = result;
+                        if(!app) {
+                            throw new Error("ApplicationNotFound");
+                        }
+                        // Loop through all questions
+                        for(let i = 0; i < app.questions.length; i++) {
+                            // The question is required
+                            if(app.questions[i].required) {
+                                let answer = HackerApplicationController._getHackerAnswerByQuestion(hackerApp, app.questions[i]);
+                                if(!answer.length) {
+                                    throw new Error("RequiredQuestionNotAnswered");
+                                }
+                            }
+                        }
+                        // If we get here, we are good
+                        hackerApp.set("submitted_at", new Date());
+                        return hackerApp.save();
+                    })
+                    .then(result => {
+                        resolve(result);
+                    })
+                    .catch(e => {
+                        reject(e);
+                    })
+            }
+        })
+    }
+
+    /**
      * Update an application answer for the hacker
      * @param obj
      * @param args

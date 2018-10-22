@@ -146,5 +146,6 @@ type Mutation {
     createUserToken(username: String!, password: String!, expire_after: Int): UserToken
     createHackerApplication(application_id: String!): HackerApplication
     updateHackerApplicationAnswer(hacker_application_id: String!, question_id: String!, answer: [String]!): HackerApplication
+    submitHackerApplication(hacker_application_id: String!): HackerApplication
 }
 `;
