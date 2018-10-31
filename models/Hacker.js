@@ -10,6 +10,7 @@ let hackerSchema = mongoose.Schema(
         gender: String,
         dob: String,
         school: String,
+        phone_number: String,
         github: String,
         linkedin: String,
         website: String,

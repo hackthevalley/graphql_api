@@ -52,6 +52,7 @@ type Hacker {
     email_address: String,
     first_name: String,
     last_name: String,
+    phone_number: String,
     gender: String,
     dob: String,
     school: String,
@@ -75,6 +76,7 @@ input UpdateHackerInput {
     github: String,
     linkedin: String,
     website: String,
+    phone_number: String,
     description: String,
     promo_email: String
 }
