@@ -4,27 +4,16 @@ dotenv.load();
 const PORT_NUMBER = process.env.PORT ? process.env.PORT : 3000;
 
 const mongoose = require('mongoose');
-const cors = require('cors');
 const express = require('express');
 const {ApolloServer} = require('apollo-server-express');
-const bodyParser = require('body-parser');
 const app = express();
 
 // Register middlewares
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-
+require('./middlewares')(app);
 
 // Initialize GraphQL
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
-const authenticationMiddleware = require('./middlewares/authenticationMiddleware');
-const userAuthenticationMiddleware = require('./middlewares/userAuthenticationMiddleware');
-
-app.use(authenticationMiddleware);
-app.use(userAuthenticationMiddleware);
-
 
 // Initialize GraphQL endpoints
 const server = new ApolloServer({
