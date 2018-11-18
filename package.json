@@ -20,6 +20,7 @@
   "homepage": "https://github.com/hackthevalley/hack_the_valley_api#readme",
   "dependencies": {
     "apollo-server-express": "^2.0.0",
+    "aws-sdk": "^2.358.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
@@ -29,6 +30,7 @@
     "mongoose": "^5.2.5",
     "morgan": "^1.9.1",
     "pbkdf2": "^3.0.16",
+    "uuid": "^3.3.2",
     "uuid-v4": "^0.1.0",
     "validator": "^10.8.0",
     "winston": "^3.1.0"

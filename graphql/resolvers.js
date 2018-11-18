@@ -36,6 +36,7 @@ module.exports =  {
         deleteEventApplicationQuestion: ApplicationController.deleteQuestion,
         createHacker: HackerController.create,
         updateHacker: HackerController.update,
+        sendHackerPasswordResetEmail: HackerController.sendPasswordResetEmail,
         createHackerToken: HackerTokenController.create,
         createUserToken: UserTokenController.create,
         createHackerApplication: HackerApplicationController.create,

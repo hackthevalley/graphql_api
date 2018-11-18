@@ -4,6 +4,8 @@ const validateEmail = require('../util/validateEmail');
 const uuid = require('uuid-v4');
 const pbkdf2 = require('pbkdf2');
 const util = require('util');
+const EmailServiceProvider = require('../providers/email');
+const PasswordResetTemplate = require('../providers/email/templates/PasswordReset');
 pbkdf2.pbkdf2 = util.promisify(pbkdf2.pbkdf2);
 
 
@@ -110,6 +112,24 @@ class HackerController {
                 })
                 .catch(e => reject(e));
         })
+    }
+
+    /**
+     * Send a password reset email
+     * @param obj
+     * @param args
+     * @param context
+     * @returns {Promise<boolean>}
+     */
+    static async sendPasswordResetEmail(obj, args, context) {
+        let hacker = await Hacker.findOne({email_address: args.email_address});
+        if(!hacker) {
+            throw new Error("HackerNotFound");
+        }
+        const code = Math.floor(1000 + Math.random() * 9000);
+        const template = new PasswordResetTemplate({code});
+        await EmailServiceProvider.sendWithTemplate(hacker.email_address, template);
+        return true;
     }
 }
 
