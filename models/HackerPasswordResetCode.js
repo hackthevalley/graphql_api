@@ -1,16 +1,16 @@
 /*---------------------------------------------
- * HackerToken.js
- * Hacker bearer authentication token
+ * HackerPasswordResetCode.js
+ * A 4 digit password reset code for hackers.
  *
  * Author(s): Jun Zheng (me at jackzh dot com)
  ---------------------------------------------*/
 
 const mongoose = require('mongoose');
 
-let hackerTokenSchema = mongoose.Schema(
+let hackerPasswordResetCodeSchema = mongoose.Schema(
     {
         hacker_id: mongoose.SchemaTypes.ObjectId,
-        token_body: String,
+        code: String,
         expire_at: Date
     },
     {
@@ -18,4 +18,4 @@ let hackerTokenSchema = mongoose.Schema(
     }
 );
 
-module.exports = mongoose.model('HackerToken', hackerTokenSchema);
+module.exports = mongoose.model('HackerPasswordResetCode', hackerPasswordResetCodeSchema);

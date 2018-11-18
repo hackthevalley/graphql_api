@@ -6,6 +6,7 @@ const pbkdf2 = require('pbkdf2');
 const util = require('util');
 const EmailServiceProvider = require('../providers/email');
 const PasswordResetTemplate = require('../providers/email/templates/PasswordReset');
+const HackerPasswordResetCode = require('../models/HackerPasswordResetCode');
 pbkdf2.pbkdf2 = util.promisify(pbkdf2.pbkdf2);
 
 
@@ -123,13 +124,44 @@ class HackerController {
      */
     static async sendPasswordResetEmail(obj, args, context) {
         let hacker = await Hacker.findOne({email_address: args.email_address});
-        if(!hacker) {
-            throw new Error("HackerNotFound");
-        }
-        const code = Math.floor(1000 + Math.random() * 9000);
+        if(!hacker) throw new Error("HackerNotFound");
+        const code = Math.floor(10000000 + Math.random() * 90000000); // Random 8 digit number
+        const hackerCode = new HackerPasswordResetCode({
+            hacker_id: hacker._id,
+            code,
+            expire_at: new Date(new Date().getTime() + 300000) // 1000 * 60 * 5 (5 min)
+        });
+        await hackerCode.save();
         const template = new PasswordResetTemplate({code});
         await EmailServiceProvider.sendWithTemplate(hacker.email_address, template);
         return true;
+    }
+
+    /**
+     * Reset hacker password
+     * @param obj
+     * @param args
+     * @param context
+     * @returns {Promise<*>}
+     */
+    static async resetPassword(obj, args, context) {
+        let hacker = await Hacker.findOne({email_address: args.email_address});
+        if(!hacker) throw new Error("HackerNotFound");
+        let code = await HackerPasswordResetCode.findOne({
+            hacker_id: hacker._id,
+            code: args.code
+        });
+        if(!code) throw new Error("InvalidCode");
+        if(code.expire_at.getTime() < new Date().getTime()) {
+            await code.remove();
+            throw new Error("InvalidCode");
+        }
+        if(args.new_password.length < 8) throw new Error("PasswordTooShort");
+        let newPassword = await pbkdf2.pbkdf2(args.new_password, hacker.salt, 100000, 64, 'sha512');
+        await code.remove();
+        hacker.set({password: newPassword.toString('hex')});
+        await hacker.save();
+        return hacker;
     }
 }
 

@@ -37,6 +37,7 @@ module.exports =  {
         createHacker: HackerController.create,
         updateHacker: HackerController.update,
         sendHackerPasswordResetEmail: HackerController.sendPasswordResetEmail,
+        resetHackerPassword: HackerController.resetPassword,
         createHackerToken: HackerTokenController.create,
         createUserToken: UserTokenController.create,
         createHackerApplication: HackerApplicationController.create,
