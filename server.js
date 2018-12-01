@@ -26,18 +26,12 @@ const server = new ApolloServer({
 
 server.applyMiddleware({app});
 
+app.set('view engine', 'ejs');
+require('./routes/admin')(app);
+
 // Connect to database
 mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true})
     .then(() => console.log("Mongoose connected..."));
-
-// const EmailServiceProvider = require('./providers/email');
-// const PasswordResetTemplate = require('./providers/email/templates/PasswordReset');
-//
-// const temp = new PasswordResetTemplate({
-//     code: "1234"
-// });
-//
-// EmailServiceProvider.sendWithTemplate("me@jackzh.com", temp);
 
 // Start the server
 app.listen(PORT_NUMBER, () => console.log('Go to http://localhost:' + PORT_NUMBER + '/graphql to run queries!'));

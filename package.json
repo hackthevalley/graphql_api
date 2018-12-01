@@ -4,7 +4,7 @@
   "description": "Hack the Valley Primary API, Shared Across All Events",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "setup": "node setup.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,7 +24,9 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
+    "ejs": "^2.6.1",
     "express": "^4.16.3",
+    "express-basic-auth": "^1.1.6",
     "graphql": "^0.13.2",
     "graphql-tools": "^3.0.5",
     "mongoose": "^5.2.5",
@@ -34,5 +36,8 @@
     "uuid-v4": "^0.1.0",
     "validator": "^10.8.0",
     "winston": "^3.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.7"
   }
 }

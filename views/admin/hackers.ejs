@@ -1,0 +1,11 @@
+<%- include partials/head.ejs %>
+
+<a href="/admin/hackers/json">Export JSON</a>
+
+<h2>Total Hackers <%= hackers.length %></h2>
+
+<% hackers.forEach(hacker => { %>
+    <hr/>
+    <h3>Name: <%= hacker.first_name %> <%= hacker.last_name %></h3>
+    <pre><%= JSON.stringify(hacker, null, 2) %></pre>
+<% }) %>
