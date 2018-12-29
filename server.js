@@ -12,12 +12,12 @@ const app = express();
 require('./middlewares')(app);
 
 // Initialize GraphQL
-const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
 
 // Initialize GraphQL endpoints
 const server = new ApolloServer({
-    typeDefs, resolvers,
+    typeDefs: require('./graphql/types'),
+    resolvers,
     context: ({ req }) => ({
         hacker: req.hacker,
         user: req.user
