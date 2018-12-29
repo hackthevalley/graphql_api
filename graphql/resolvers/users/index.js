@@ -1,3 +1,4 @@
 module.exports = [
-    require('./userResolvers')
+    require('./userResolvers'),
+    require('./userTokenResolvers')
 ];

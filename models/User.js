@@ -35,6 +35,16 @@ userSchema.statics.hashPassword = async function(password, salt) {
 };
 
 /**
+ * Check if a password match.
+ * @param {string} password
+ * @returns {Promise<boolean>}
+ */
+userSchema.methods.matchPassword = async function(password) {
+    let hash = await this.model('User').hashPassword(password, this.salt);
+    return hash === this.password;
+};
+
+/**
  * Create an new user
  * @param {{username: string, email_address: string?, password: string, group: string}} arguments
  * @returns {Promise<User>}
