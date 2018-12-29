@@ -16,4 +16,5 @@ module.exports = function(app) {
     app.use(cors());
     app.use(require('./authentication/authenticationMiddleware'));
     app.use(require('./authentication/userAuthenticationMiddleware'));
+    app.use(require('./authentication/superAdminAuthenticationMiddleware'));
 };

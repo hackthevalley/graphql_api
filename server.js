@@ -20,7 +20,8 @@ const server = new ApolloServer({
     resolvers,
     context: ({ req }) => ({
         hacker: req.hacker,
-        user: req.user
+        user: req.user,
+        isSuperAdmin: req.isSuperAdmin
     })
 });
 

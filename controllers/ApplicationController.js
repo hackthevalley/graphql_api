@@ -1,35 +1,29 @@
-const Event = require('../models/Event');
-const Application = require('../models/Application');
+const Event                          = require('../models/Event');
+const Application                    = require('../models/Application');
+const IsAuthenticatedAsAdminUserRule = require('../rules/IsAuthenticatedAsAdminUserRule');
+const PermissionError                = require('../errors/PermissionError');
+const NotFoundError                  = require('../errors/NotFoundError');
+
 
 class ApplicationController {
     /**
      * Create a new application
-     * @param obj
-     * @param args
-     * @param context
-     * @returns {Promise<any>}
+     * @param {Mixed} obj
+     * @param {{event_id: String, name: String}} args
+     * @param {Mixed} context
+     * @returns {Promise<Application>}
      */
-    static create(obj, args, context) {
-        return new Promise((resolve, reject) => {
-            if(!context.user || context.user.group !== 'admin') {
-                return reject("NotAuthorized");
-            } else {
-                Event.findOne({_id: args.event_id})
-                    .then(event => {
-                        if(event) {
-                            // Create the application
-                            let app = new Application({event_id: args.event_id, name: args.name, open: false});
-                            return app.save();
-                        } else {
-                            throw new Error("EventNotFound");
-                        }
-                    })
-                    .then(app => {
-                        resolve(app);
-                    })
-                    .catch(e => reject(e));
-            }
-        })
+    static async create(obj, args, context) {
+        if (!await IsAuthenticatedAsAdminUserRule.pass(context)) {
+            throw new PermissionError("You don't have enough permission to create an new event.");
+        }
+        let event = await Event.findOne({_id: args.event_id});
+        if (!event) {
+            throw new NotFoundError("Event is not found, please check your request and try again.");
+        }
+        let app = new Application({event_id: args.event_id, name: args.name, open: false});
+        await app.save();
+        return app;
     }
 
     /**
@@ -41,13 +35,13 @@ class ApplicationController {
      */
     static update(obj, args, context) {
         return new Promise((resolve, reject) => {
-            if(!context.user || context.user.group !== 'admin') {
+            if (!context.user || context.user.group !== 'admin') {
                 return reject("NotAuthorized");
             } else {
                 // First find the application
                 Application.findOne({_id: args.application_id})
                     .then(app => {
-                        if(app) {
+                        if (app) {
                             app.set(args.application);
                             return app.save();
                         } else {
@@ -71,13 +65,13 @@ class ApplicationController {
      */
     static delete(obj, args, context) {
         return new Promise((resolve, reject) => {
-            if(!context.user || context.user.group !== 'admin') {
+            if (!context.user || context.user.group !== 'admin') {
                 return reject("NotAuthorized");
             } else {
                 // First find the application
                 Application.findOne({_id: args.application_id})
                     .then(app => {
-                        if(app) {
+                        if (app) {
                             return app.remove();
                         } else {
                             throw new Error("ApplicationNotFound");
@@ -100,7 +94,7 @@ class ApplicationController {
      */
     static createQuestion(obj, args, context) {
         return new Promise((resolve, reject) => {
-            if(!context.user || context.user.group !== 'admin') {
+            if (!context.user || context.user.group !== 'admin') {
                 return reject("NotAuthorized");
             } else {
                 let app;
@@ -108,18 +102,18 @@ class ApplicationController {
                 Application.findOne({_id: args.application_id})
                     .then(result => {
                         app = result;
-                        if(!app) {
+                        if (!app) {
                             throw new Error("ApplicationNotFound");
                         }
                     })
                     .then(() => {
-                        if(!args.question.question_type.match(/^email|short|long|date|checkbox|choice|radio$/)) {
+                        if (!args.question.question_type.match(/^email|short|long|date|checkbox|choice|radio$/)) {
                             throw new Error("InvalidQuestionType");
                         }
-                        if(args.question.question_type === 'choice' && (!args.question.choices || args.question.choices.length === 0)) {
+                        if (args.question.question_type === 'choice' && (!args.question.choices || args.question.choices.length === 0)) {
                             throw new Error("MustHaveAtLeastOneChoice");
                         }
-                        if(args.question.question_type === 'radio' && (!args.question.choices || args.question.choices.length === 0)) {
+                        if (args.question.question_type === 'radio' && (!args.question.choices || args.question.choices.length === 0)) {
                             throw new Error("MustHaveAtLeastOneChoice");
                         }
                         app.questions.push(args.question);
@@ -142,7 +136,7 @@ class ApplicationController {
      */
     static updateQuestion(obj, args, context) {
         return new Promise((resolve, reject) => {
-            if(!context.user || context.user.group !== 'admin') {
+            if (!context.user || context.user.group !== 'admin') {
                 return reject("NotAuthorized");
             } else {
                 let app, question;
@@ -150,30 +144,30 @@ class ApplicationController {
                 Application.findOne({_id: args.application_id})
                     .then(result => {
                         app = result;
-                        if(!app) {
+                        if (!app) {
                             throw new Error("ApplicationNotFound");
                         }
                         question = app.questions.id(args.question_id);
-                        if(!question) {
+                        if (!question) {
                             throw new Error("QuestionNotFound");
                         }
                     })
                     .then(() => {
-                        if(args.question.question_type) {
+                        if (args.question.question_type) {
                             // We are changing question type
-                            if(!args.question.question_type.match(/^email|short|long|date|checkbox|choice|radio$/)) {
+                            if (!args.question.question_type.match(/^email|short|long|date|checkbox|choice|radio$/)) {
                                 throw new Error("InvalidQuestionType");
                             }
-                            if(args.question.question_type === 'choice' && (!args.question.choices || args.question.choices.length === 0)) {
+                            if (args.question.question_type === 'choice' && (!args.question.choices || args.question.choices.length === 0)) {
                                 throw new Error("MustHaveAtLeastOneChoice");
                             }
-                            if(args.question.question_type === 'radio' && (!args.question.choices || args.question.choices.length === 0)) {
+                            if (args.question.question_type === 'radio' && (!args.question.choices || args.question.choices.length === 0)) {
                                 throw new Error("MustHaveAtLeastOneChoice");
                             }
                         } else {
                             // Not changing question type
-                            if(question.question_type === 'choice' || question.question_type === 'radio') {
-                                if(args.question.choices && args.question.choices.length === 0) {
+                            if (question.question_type === 'choice' || question.question_type === 'radio') {
+                                if (args.question.choices && args.question.choices.length === 0) {
                                     throw new Error("MustHaveAtLeastOneChoice");
                                 }
                             }
@@ -199,7 +193,7 @@ class ApplicationController {
      */
     static deleteQuestion(obj, args, context) {
         return new Promise((resolve, reject) => {
-            if(!context.user || context.user.group !== 'admin') {
+            if (!context.user || context.user.group !== 'admin') {
                 return reject("NotAuthorized");
             } else {
                 let app, question;
@@ -207,11 +201,11 @@ class ApplicationController {
                 Application.findOne({_id: args.application_id})
                     .then(result => {
                         app = result;
-                        if(!app) {
+                        if (!app) {
                             throw new Error("ApplicationNotFound");
                         }
                         question = app.questions.id(args.question_id);
-                        if(!question) {
+                        if (!question) {
                             throw new Error("QuestionNotFound");
                         }
                     })
