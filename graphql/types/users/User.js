@@ -1,6 +1,11 @@
 module.exports = `
+"Object represents a hackathon organizer user."
 type User {
+    "User ID (Primary Key)"
+    _id: String
+    "Username (Primary Key)"
     username: String
-    group: String
+    "Group this user belongs to."
+    group: UserGroup
 }
 `;

@@ -2,7 +2,8 @@ const HackerController = require('../../../controllers/HackerController');
 
 module.exports = {
     Query: {
-        me: HackerController.me
+        me: HackerController.me,
+        hackers: HackerController.list
     },
     Hacker: {
         applications: HackerController.applications,
