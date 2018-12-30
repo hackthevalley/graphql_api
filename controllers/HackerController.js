@@ -107,14 +107,12 @@ class HackerController {
      * @param context
      * @returns {Promise<any>}
      */
-    static applications(obj, args, context) {
-        return new Promise((resolve, reject) => {
-            HackerApplication.find({hacker_id: obj._id})
-                .then(applications => {
-                    resolve(applications);
-                })
-                .catch(e => reject(e));
-        })
+    static async applications(obj, args, context) {
+        let filter = {hacker_id: obj._id};
+        if(args.submitted !== null) {
+            filter.submitted_at = {$exists: args.submitted}
+        }
+        return await HackerApplication.find(filter);
     }
 
     /**

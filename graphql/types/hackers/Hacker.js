@@ -28,7 +28,7 @@ type Hacker {
     "Avatar link for the hacker."
     avatar: String
     "List of applications started by this hacker."
-    applications: [HackerApplication]
+    applications(submitted: Boolean = null): [HackerApplication]
     promo_email: String
     "Time of creation."
     created_at: String
