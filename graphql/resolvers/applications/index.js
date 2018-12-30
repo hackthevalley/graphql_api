@@ -1,4 +1,5 @@
 module.exports = [
     require('./applicationResolvers'),
-    require('./hackerApplicationResolvers')
+    require('./hackerApplicationResolvers'),
+    require('./hackerApplicationAnswerResolvers')
 ];

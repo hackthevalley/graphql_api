@@ -18,6 +18,7 @@ const resolvers = require('./graphql/resolvers');
 const server = new ApolloServer({
     typeDefs: require('./graphql/types'),
     resolvers,
+    tracing: true,
     context: ({ req }) => ({
         hacker: req.hacker,
         user: req.user,
