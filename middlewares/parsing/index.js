@@ -13,6 +13,6 @@ const bodyParser = require('body-parser');
  * @param app
  */
 module.exports = function(app) {
-    app.use(bodyParser.json());
+    app.use(bodyParser.json({ limit: "50mb", type:'application/json'}));
     app.use(bodyParser.urlencoded({extended: false, limit: '50mb'}));
 };
