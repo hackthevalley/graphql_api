@@ -16,7 +16,8 @@ let hackerSchema = mongoose.Schema(
         website: String,
         description: String,
         avatar: String,
-        promo_email: Boolean
+        promo_email: Boolean,
+        resume: String
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
