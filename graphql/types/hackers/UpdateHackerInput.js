@@ -10,6 +10,7 @@ input UpdateHackerInput {
     website: String,
     phone_number: String,
     description: String,
-    promo_email: String
+    promo_email: String,
+    resume: String
 }
 `;

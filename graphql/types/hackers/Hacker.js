@@ -30,6 +30,8 @@ type Hacker {
     "List of applications started by this hacker."
     applications(submitted: Boolean = null): [HackerApplication]
     promo_email: String
+    "Hacker's resume in base64 format."
+    resume: String
     "Time of creation."
     created_at: String
     "Time of update."
